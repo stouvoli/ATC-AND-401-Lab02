@@ -11,10 +11,10 @@ import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
 public class MainActivity extends AppCompatActivity {
-    private android.hardware.Camera camera;
+    private Camera camera;
     private boolean isFlashOn;
-    private boolean hasFlash;
     android.hardware.Camera.Parameters param;
+    final String TAG = "MainActivity123";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //check if flash light is supported
-        hasFlash = getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+        boolean hasFlash = getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
 
         if (!hasFlash) {
             //flash not supported
@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
             AlertDialog alert = builder.create();
             alert.show();
         }
+
         getCamera();
         ToggleButton flashSwitch = (ToggleButton) findViewById(R.id.flash_switch);
         flashSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -61,19 +62,10 @@ public class MainActivity extends AppCompatActivity {
                 camera = android.hardware.Camera.open();
                 param = camera.getParameters();
             } catch (RuntimeException e) {
-                Log.e("SimpleFlashLight", "Camera Error: " + e.getMessage());
+                Log.e(TAG, "Camera Error: " + e.getMessage());
 
             }
 
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (camera != null) {
-            camera.release();
-            camera = null;
         }
     }
 
@@ -89,6 +81,15 @@ public class MainActivity extends AppCompatActivity {
         turnOffFlash();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (camera != null) {
+            camera.release();
+            camera = null;
+        }
+    }
+
     private void turnOnFlash() {
         if (!isFlashOn) {
             if (camera == null || param == null) {
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             camera.startPreview();
             isFlashOn = true;
 
-            Log.v("SimpleFlashLight", "Flash has been turned on ...");
+            Log.v(TAG, "Flash has been turned on ...");
         }
     }
 
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             camera.stopPreview();
             isFlashOn = false;
 
-            Log.v("SimpleFlashLight", "Flash has been turned off ...");
+            Log.v(TAG, "Flash has been turned off ...");
         }
     }
 }

@@ -12,7 +12,7 @@
     <ToggleButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ok"
+        android:text="@string/ok"
         android:id="@+id/flash_switch"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
